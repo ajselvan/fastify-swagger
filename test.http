@@ -1,0 +1,25 @@
+### GET ALL ITEMS
+GET http://[::1]:5000/items HTTP/1.1
+
+### GET SINGLE ITEM
+GET http://[::1]:5000/items/2 HTTP/1.1
+
+### Post ADD ITEM
+POST http://[::1]:5000/addItem HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "New Item"
+}
+
+### Delete ITEM
+DELETE  http://[::1]:5000/items/3 HTTP/1.1
+
+
+### Update ADD ITEM
+PUT http://[::1]:5000/items/2 HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Deepak"
+}
