@@ -2,6 +2,11 @@ let items = require('../items');
 let referrals = require('../referralRecords');
 let missionCompleted = require('../missionActivity');
 
+const steam_data = "Steam Connected Successfully"
+const auth_link = "https://api.twitter.com/oauth/authenticate?oauth_token=k5jEUQAAAAABpu-YAAABiyM-zjI"
+const twitter_data = "Twitter followed kanalabs Successfully"
+
+
 
 
 const { v4: uuidv4 } = require('uuid')
@@ -10,9 +15,42 @@ const getAllUserDetails = (req,reply) => {
     reply.send(items)
 }
 
+const steamConnect = (req,reply) => {
+    reply.send(steam_data)
+}
+
+const twitterAuthLink = (req,reply) => {
+    reply.send(auth_link)
+}
+
+const twitterFollow = (req,reply) => {
+    reply.send(twitter_data)
+}
+
+const twitterConnect = (req,reply) => {
+    const {oauth_token, oauth_verifier } = req.body
+    const item = {
+        oauth_token,
+        oauth_verifier,
+    }
+    reply.code(201).send(item)
+}
+
 const getLeaderBoard = (req,reply) => {
     reply.send(items)
 }
+
+const getUsernameExistsOrNot = (req, reply) => {
+    const { username } = req.query;
+    const user = items.find(item => item.username === username);
+  
+    if (user) {
+      reply.code(200).send({ message: 'Username exists' });
+    } else {
+      reply.code(404).send({ message: 'Username does not exist' });
+    }
+  };
+  
 
 const getUserDetails = (req,reply) => {
     const { user_wallet } = req.query;
@@ -37,7 +75,12 @@ const getReferralRecords = (req, reply) => {
     const matchingRecords = missionCompleted.filter((item) => item.user_wallet === user_wallet);  
     reply.send(matchingRecords);
   };
-  
+
+  const getNotCompletedMissions = (req, reply) => {
+    const { user_wallet } = req.query;
+    const matchingRecords = missionCompleted.filter((item) => item.user_wallet === user_wallet);  
+    reply.send(matchingRecords);
+  };
 
 const addUserDetails = (req,reply) => {
     const {user_wallet, username, user_display_name, language, preferred_genres, instagram, twitter, telegram, discord } = req.body
@@ -165,6 +208,7 @@ module.exports = {
     getAllUserDetails,
     getLeaderBoard,
     getUserDetails,
+    getUsernameExistsOrNot,
     addUserDetails,
     deleteUser,
     updateUser,
@@ -175,5 +219,10 @@ module.exports = {
     getReferralRecords,
     addreferralLinks,
     missionActivity,
-    getCompletedMissions
+    getCompletedMissions,
+    getNotCompletedMissions,
+    steamConnect,
+    twitterAuthLink,
+    twitterConnect,
+    twitterFollow
 }

@@ -10,8 +10,41 @@ GET http://[::1]:5000/getUserDetails?user_wallet=0x40c7be7e5889dc9c6295dfa5ec5c9
 GET http://[::1]:5000/getUserByUsername?username=selvan HTTP/1.1
 
 
+### GET User Name exists or not
+GET http://[::1]:5000/userName?username=selvan HTTP/1.1
+
+
 ### GET LeaderBoard
 GET http://[::1]:5000/leaderBoard HTTP/1.1
+
+
+### GET steam connect
+GET http://[::1]:5000/steam/connect?user_wallet=0x40c7be7e5889dc9c6295dfa5ec5c97b36ce9eeef&mission_id=m_fol_ds_092023 HTTP/1.1
+
+
+
+### Post twitter Auth Link
+POST http://[::1]:5000/twitter/authlink HTTP/1.1
+
+
+### Post twitter Connect
+POST http://[::1]:5000/twitter/connect HTTP/1.1
+Content-Type: application/json
+
+{
+    "oauth_token":"K91djwAAAAABpu-YAAABiyNFAy4",
+    "oauth_verifier":"8739830",
+}
+
+
+### Post twitter Follow
+POST http://[::1]:5000/twitter/follow HTTP/1.1
+Content-Type: application/json
+
+{
+    "user_wallet":"0x5E616deADe06C07B2A61E4fEcEec7394Ff362BbD",
+}
+
 
 
 ### GET Referral records
@@ -22,6 +55,9 @@ GET http://[::1]:5000/getReferralRecords?referrer_wallet=0x5E616deADe06C07B2A61E
 ### GET Completed Missions
 GET http://[::1]:5000/getCompletedMissions?user_wallet=1234567890 HTTP/1.1
 
+
+### GET Not Completed Missions
+GET http://[::1]:5000/getNotCompletedMissions?user_wallet=0x40c7be7e5889dc9c6295dfa5ec5c97b36ce9eeef HTTP/1.1
 
 
 ### Post ADD user

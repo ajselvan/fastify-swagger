@@ -1,4 +1,4 @@
-const { getAllUserDetails, getUserDetails, addUserDetails, deleteUser, updateUser, addMissions, addLevels, getUserByUsername, referralRecords, getReferralRecords, addreferralLinks, missionActivity, getCompletedMissions, getLeaderBoard } = require('../controller/itemsController');
+const { getAllUserDetails, getUserDetails, addUserDetails, deleteUser, updateUser, addMissions, addLevels, getUserByUsername, referralRecords, getReferralRecords, addreferralLinks, missionActivity, getCompletedMissions, getLeaderBoard, steamConnect, twitterAuthLink, twitterConnect, twitterFollow, getNotCompletedMissions, getUsernameExistsOrNot } = require('../controller/itemsController');
 const Item = {
     type: 'object',
     properties: {
@@ -31,6 +31,18 @@ const missions = {
     }
 }
 
+const twittermissions = {
+    type: 'object',
+    properties: {
+        oauth_token: { type: 'string' },
+        oauth_verifier: { type: 'string' },
+    }
+}
+
+const steamResponse = {
+    type: 'string'
+}
+
 const levels = {
     type: 'object',
     properties: {
@@ -57,6 +69,14 @@ const missionCompleted = {
     properties: {
         mission_id: { type: 'string' },
         user_wallet: { type: 'string' },
+    }
+}
+
+const missionNotCompleted = {
+    type: 'object',
+    properties: {
+        mission_id: { type: 'string' },
+        mission_title: { type: 'string' },
     }
 }
 
@@ -109,6 +129,88 @@ const getUserDetailsOptions = {
     handler: getUserDetails,
 };
 
+
+const getUserExitsOrNotOptions = {
+    schema: {
+      querystring: {
+        type: 'object',
+        properties: {
+          username: { type: 'string' },
+        },
+        required: ['username'],
+      },
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+          },
+        },
+      },
+    },
+    handler: getUsernameExistsOrNot,
+  };
+  
+
+const steamConnectOptions = {
+    schema: {
+        querystring: {
+            type: 'object',
+            properties: {
+                user_wallet: { type: 'string' },
+                mission_id: { type: 'string' },
+            },
+            required: ['user_wallet', 'mission_id'],
+        },
+        response: {
+            200: steamResponse,
+        },
+    },
+    handler: steamConnect,
+};
+
+const authLinkOptions = {
+    schema: {
+        response: {
+            200: steamResponse,
+        },
+    },
+    handler: twitterAuthLink,
+};
+
+const connectOptions = {
+    schema: {
+        body: {
+            type: 'object',
+            required: ['oauth_token', 'oauth_verifier'],
+            properties: {
+                oauth_token: { type: 'string' },
+                oauth_verifier: { type: 'string' },
+            },
+        },
+        response: {
+            201: twittermissions,
+        },
+    },
+    handler: twitterConnect,
+};
+
+const followOptions = {
+    schema: {
+        body: {
+            type: 'object',
+            required: ['user_wallet'],
+            properties: {
+                user_wallet: { type: 'string' },
+            },
+        },
+        response: {
+            201: steamResponse,
+        },
+    },
+    handler: twitterFollow,
+};
+
 const getReferralRecordsOptions = {
     schema: {
         querystring: {
@@ -148,6 +250,26 @@ const getCompletedMissionsOptions = {
 };
 
 
+const getNotCompletedMissionsOptions = {
+    schema: {
+        querystring: {
+            type: 'object',
+            properties: {
+                user_wallet: { type: 'string' },
+            },
+            required: ['user_wallet'],
+        },
+        response: {
+            200: {
+                type: 'array',
+                items: missionNotCompleted
+            },
+        },
+    },
+    handler: getNotCompletedMissions,
+};
+
+
 const getUserByUsernameOptions = {
     schema: {
         querystring: {
@@ -168,7 +290,7 @@ const addUserDetailsOptions = {
     schema: {
         body: {
             type: 'object',
-            required: ['user_wallet', 'username'], 
+            required: ['user_wallet', 'username'],
             properties: {
                 user_wallet: { type: 'string' },
                 username: { type: 'string' },
@@ -208,14 +330,14 @@ const updateUserOptions = {
         querystring: {
             type: 'object',
             properties: {
-                user_wallet: { type: 'string' }, 
+                user_wallet: { type: 'string' },
             },
         },
         body: {
             type: 'object',
-            required: ['username'], 
+            required: ['username'],
             properties: {
-                username: { type: 'string' }, 
+                username: { type: 'string' },
             },
         },
         response: {
@@ -229,9 +351,9 @@ const missionOptions = {
     schema: {
         body: {
             type: 'object',
-            required: ['mission_id', 'mission_title', 'platform'], 
+            required: ['mission_id', 'mission_title', 'platform'],
             properties: {
-                mission_id: { type: 'string' }, 
+                mission_id: { type: 'string' },
                 mission_title: { type: 'string' },
                 platform: { type: 'string' },
             },
@@ -248,9 +370,9 @@ const referralRecordsOptions = {
     schema: {
         body: {
             type: 'object',
-            required: ['referrer_wallet', 'referred_wallet'], 
+            required: ['referrer_wallet', 'referred_wallet'],
             properties: {
-                referrer_wallet: { type: 'string' }, 
+                referrer_wallet: { type: 'string' },
                 referred_wallet: { type: 'string' },
             },
         },
@@ -266,9 +388,9 @@ const missionActivityOptions = {
     schema: {
         body: {
             type: 'object',
-            required: ['mission_id', 'user_wallet'], 
+            required: ['mission_id', 'user_wallet'],
             properties: {
-                mission_id: { type: 'string' }, 
+                mission_id: { type: 'string' },
                 user_wallet: { type: 'string' },
             },
         },
@@ -284,7 +406,7 @@ const addReferralLinksOptions = {
     schema: {
         body: {
             type: 'object',
-            required: ['user_wallet', 'referral_link'],  
+            required: ['user_wallet', 'referral_link'],
             properties: {
                 user_wallet: { type: 'string' },
                 referral_link: { type: 'string' },
@@ -329,39 +451,54 @@ function itemRoutes(fastify, options, done) {
     // Get User By User name
     fastify.get('/getUserByUsername', getUserByUsernameOptions)
 
-    // Get ReferralRecords
-    fastify.get('/getReferralRecords', getReferralRecordsOptions)
-
-    // Get Completed Missions
-    fastify.get('/getCompletedMissions', getCompletedMissionsOptions)
-    
-    // Get LeaderBoard
-    fastify.get('/leaderBoard', leaderBoardOptions)
-
     // Add Item
     fastify.post('/addUserDetails', addUserDetailsOptions)
-
-    // Add Missions
-    fastify.post('/mission', missionOptions)
-
-    // Add Mission Activity
-    fastify.post('/missionActivity', missionActivityOptions)
-
-    // Add referralRecords
-    fastify.post('/referralRecords', referralRecordsOptions)
-
-    // Add referral Links
-    fastify.post('/addReferralLinks', addReferralLinksOptions)
-
-    // Add Levels
-    fastify.post('/levelRecords', levelOptions)
-
-    // Delet Item
-    fastify.delete('/deletUser', deletUserOptions)
 
     // Update Item
     fastify.put('/updateUser', updateUserOptions)
 
+    // Add referralRecords
+    fastify.post('/referralRecords', referralRecordsOptions)
+
+    // Get ReferralRecords
+    fastify.get('/getReferralRecords', getReferralRecordsOptions)
+
+    // Add referral Links
+    fastify.post('/addReferralLinks', addReferralLinksOptions)
+
+    // Add Missions
+    fastify.post('/mission', missionOptions)
+
+    // Add Levels
+    fastify.post('/levelRecords', levelOptions)
+
+    // Add Mission Activity
+    fastify.post('/missionActivity', missionActivityOptions)
+
+    // Get Completed Missions
+    fastify.get('/steam/connect', steamConnectOptions)
+
+    // Twitter Auth Link
+    fastify.post('/twitter/authlink', authLinkOptions)
+
+    // Twitter Connect
+    fastify.post('/twitter/connect', connectOptions)
+
+    // Twitter Follow
+    fastify.post('/twitter/follow', followOptions)
+
+    // Get Completed Missions
+    fastify.get('/getCompletedMissions', getCompletedMissionsOptions)
+
+    // Get Completed Missions
+    fastify.get('/getNotCompletedMissions', getNotCompletedMissionsOptions)
+
+    // Get User By User name
+    fastify.get('/userName', getUserExitsOrNotOptions)
+
+
+    // Delet Item
+    fastify.delete('/deletUser', deletUserOptions)
 
     done()
 }
