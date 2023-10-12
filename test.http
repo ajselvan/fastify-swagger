@@ -3,11 +3,11 @@ GET http://[::1]:5000/getAllUserDetails HTTP/1.1
 
 
 ### GET SINGLE User
-GET http://[::1]:5000/getUserDetails?user_wallet=0x40c7be7e5889dc9c6295dfa5ec5c97b36ce9eeef HTTP/1.1
+GET http://[::1]:5000/getUserDetails?user_wallet=1x40c7be7e5889dc9c6295dfa5ec5c97b36ce9eeef HTTP/1.1
 
 
 ### GET User By User Name
-GET http://[::1]:5000/getUserByUsername?username=selvan HTTP/1.1
+GET http://[::1]:5000/getUserByUsername?username=Ajay HTTP/1.1
 
 
 ### GET User Name exists or not

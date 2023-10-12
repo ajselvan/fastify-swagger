@@ -8,7 +8,7 @@ fastify.register(require('@fastify/swagger'),
     routePrefix: '/gaming',
     swagger: {
         info: {
-            title: 'fastify swagger'
+            title: 'Kana-Gaming swagger'
         },
     },
 })

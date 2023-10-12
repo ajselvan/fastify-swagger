@@ -91,30 +91,27 @@ const referralsLinks = {
 
 const getAllUserDetailsOptions = {
     schema: {
+        tags: ['User'],
         response: {
             200: {
                 type: 'array',
                 items: Item
+            },
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to get all the users' }
             },
         },
     },
     handler: getAllUserDetails
 }
 
-const leaderBoardOptions = {
-    schema: {
-        response: {
-            200: {
-                type: 'array',
-                items: Item
-            },
-        },
-    },
-    handler: getLeaderBoard
-}
-
 const getUserDetailsOptions = {
     schema: {
+        tags: ['User'],
         querystring: {
             type: 'object',
             properties: {
@@ -124,6 +121,13 @@ const getUserDetailsOptions = {
         },
         response: {
             200: Item,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'user_wallet not found' }
+            },
         },
     },
     handler: getUserDetails,
@@ -132,28 +136,37 @@ const getUserDetailsOptions = {
 
 const getUserExitsOrNotOptions = {
     schema: {
-      querystring: {
-        type: 'object',
-        properties: {
-          username: { type: 'string' },
+        tags: ['User'],
+        querystring: {
+            type: 'object',
+            properties: {
+                username: { type: 'string' },
+            },
+            required: ['username'],
         },
-        required: ['username'],
-      },
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            message: { type: 'string' },
-          },
+        response: {
+            200: {
+                type: 'object',
+                properties: {
+                    message: { type: 'string' },
+                },
+            },
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'username not found' }
+            },
         },
-      },
     },
     handler: getUsernameExistsOrNot,
-  };
-  
+};
+
 
 const steamConnectOptions = {
     schema: {
+        tags: ['Missions'],
         querystring: {
             type: 'object',
             properties: {
@@ -164,6 +177,14 @@ const steamConnectOptions = {
         },
         response: {
             200: steamResponse,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to Connect Steam' }
+            },
+            
         },
     },
     handler: steamConnect,
@@ -171,8 +192,16 @@ const steamConnectOptions = {
 
 const authLinkOptions = {
     schema: {
+        tags: ['Missions'],
         response: {
             200: steamResponse,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to Get AuthLink' }
+            },
         },
     },
     handler: twitterAuthLink,
@@ -180,6 +209,7 @@ const authLinkOptions = {
 
 const connectOptions = {
     schema: {
+        tags: ['Missions'],
         body: {
             type: 'object',
             required: ['oauth_token', 'oauth_verifier'],
@@ -190,6 +220,13 @@ const connectOptions = {
         },
         response: {
             201: twittermissions,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to Connect Twitter' }
+            },
         },
     },
     handler: twitterConnect,
@@ -197,6 +234,7 @@ const connectOptions = {
 
 const followOptions = {
     schema: {
+        tags: ['Missions'],
         body: {
             type: 'object',
             required: ['user_wallet'],
@@ -206,6 +244,13 @@ const followOptions = {
         },
         response: {
             201: steamResponse,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to Follow Twitter' }
+            },
         },
     },
     handler: twitterFollow,
@@ -213,6 +258,7 @@ const followOptions = {
 
 const getReferralRecordsOptions = {
     schema: {
+        tags: ['Referrals'],
         querystring: {
             type: 'object',
             properties: {
@@ -225,6 +271,13 @@ const getReferralRecordsOptions = {
                 type: 'array',
                 items: referrals
             },
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'referrer_wallet not found' }
+            },
         },
     },
     handler: getReferralRecords,
@@ -232,6 +285,7 @@ const getReferralRecordsOptions = {
 
 const getCompletedMissionsOptions = {
     schema: {
+        tags: ['Mission Activity'],
         querystring: {
             type: 'object',
             properties: {
@@ -244,6 +298,13 @@ const getCompletedMissionsOptions = {
                 type: 'array',
                 items: missionCompleted
             },
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'user_wallet not found' }
+            },
         },
     },
     handler: getCompletedMissions,
@@ -252,6 +313,7 @@ const getCompletedMissionsOptions = {
 
 const getNotCompletedMissionsOptions = {
     schema: {
+        tags: ['Mission Activity'],
         querystring: {
             type: 'object',
             properties: {
@@ -264,6 +326,13 @@ const getNotCompletedMissionsOptions = {
                 type: 'array',
                 items: missionNotCompleted
             },
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'user_wallet not found' }
+            },
         },
     },
     handler: getNotCompletedMissions,
@@ -272,6 +341,7 @@ const getNotCompletedMissionsOptions = {
 
 const getUserByUsernameOptions = {
     schema: {
+        tags: ['User'],
         querystring: {
             type: 'object',
             properties: {
@@ -281,6 +351,13 @@ const getUserByUsernameOptions = {
         },
         response: {
             200: Item,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'username not found' }
+            },
         },
     },
     handler: getUserByUsername,
@@ -288,6 +365,7 @@ const getUserByUsernameOptions = {
 
 const addUserDetailsOptions = {
     schema: {
+        tags: ['User'],
         body: {
             type: 'object',
             required: ['user_wallet', 'username'],
@@ -298,6 +376,13 @@ const addUserDetailsOptions = {
         },
         response: {
             201: Item,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to add user details' }
+            },
         },
     },
     handler: addUserDetails
@@ -306,6 +391,7 @@ const addUserDetailsOptions = {
 
 const deletUserOptions = {
     schema: {
+        tags: ['User'],
         querystring: {
             type: 'object',
             properties: {
@@ -319,7 +405,14 @@ const deletUserOptions = {
                 properties: {
                     message: { type: 'string' }
                 }
-            }
+            },
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to delete user details' }
+            },
         },
     },
     handler: deleteUser
@@ -327,6 +420,7 @@ const deletUserOptions = {
 
 const updateUserOptions = {
     schema: {
+        tags: ['User'],
         querystring: {
             type: 'object',
             properties: {
@@ -342,6 +436,13 @@ const updateUserOptions = {
         },
         response: {
             200: Item,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to update a user details' }
+            },
         },
     },
     handler: updateUser,
@@ -349,6 +450,7 @@ const updateUserOptions = {
 
 const missionOptions = {
     schema: {
+        tags: ['Missions'],
         body: {
             type: 'object',
             required: ['mission_id', 'mission_title', 'platform'],
@@ -360,6 +462,13 @@ const missionOptions = {
         },
         response: {
             201: missions,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to add missions' }
+            },
         },
     },
     handler: addMissions
@@ -368,6 +477,7 @@ const missionOptions = {
 
 const referralRecordsOptions = {
     schema: {
+        tags: ['Referrals'],
         body: {
             type: 'object',
             required: ['referrer_wallet', 'referred_wallet'],
@@ -378,6 +488,13 @@ const referralRecordsOptions = {
         },
         response: {
             201: referrals,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to add referral records' }
+            },
         },
     },
     handler: referralRecords
@@ -386,6 +503,7 @@ const referralRecordsOptions = {
 
 const missionActivityOptions = {
     schema: {
+        tags: ['Mission Activity'],
         body: {
             type: 'object',
             required: ['mission_id', 'user_wallet'],
@@ -396,6 +514,13 @@ const missionActivityOptions = {
         },
         response: {
             201: missionCompleted,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to add mission activity' }
+            },
         },
     },
     handler: missionActivity
@@ -404,6 +529,7 @@ const missionActivityOptions = {
 
 const addReferralLinksOptions = {
     schema: {
+        tags: ['Referrals'],
         body: {
             type: 'object',
             required: ['user_wallet', 'referral_link'],
@@ -414,6 +540,13 @@ const addReferralLinksOptions = {
         },
         response: {
             201: referralsLinks,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to add referral links' }
+            },
         },
     },
     handler: addreferralLinks
@@ -422,6 +555,7 @@ const addReferralLinksOptions = {
 
 const levelOptions = {
     schema: {
+        tags: ['Levels'],
         body: {
             type: 'object',
             required: ['level_id', 'level_name', 'badge_id', 'badge_name', 'badge_description', 'required_points'],
@@ -436,9 +570,36 @@ const levelOptions = {
         },
         response: {
             201: levels,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to add levels' }
+            },
         },
     },
     handler: addLevels
+};
+
+const leaderBoardOptions = {
+    schema: {
+        tags: ['LeaderBoard'],
+        response: {
+            200: {
+                type: 'array',
+                items: Item
+            },
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to get leaderboard' }
+            },
+        },
+    },
+    handler: getLeaderBoard
 };
 
 function itemRoutes(fastify, options, done) {
@@ -453,6 +614,9 @@ function itemRoutes(fastify, options, done) {
 
     // Add Item
     fastify.post('/addUserDetails', addUserDetailsOptions)
+
+    // User name exists or not
+    fastify.delete('/deletUser', deletUserOptions)
 
     // Update Item
     fastify.put('/updateUser', updateUserOptions)
@@ -493,12 +657,12 @@ function itemRoutes(fastify, options, done) {
     // Get Completed Missions
     fastify.get('/getNotCompletedMissions', getNotCompletedMissionsOptions)
 
+    // Get LeaderBoard
+    fastify.get('/leaderBoard', leaderBoardOptions)
+
+
     // Get User By User name
     fastify.get('/userName', getUserExitsOrNotOptions)
-
-
-    // Delet Item
-    fastify.delete('/deletUser', deletUserOptions)
 
     done()
 }
