@@ -1,25 +1,112 @@
-### GET ALL ITEMS
-GET http://[::1]:5000/items HTTP/1.1
+### GET ALL Users
+GET http://[::1]:5000/getAllUserDetails HTTP/1.1
 
-### GET SINGLE ITEM
-GET http://[::1]:5000/items/2 HTTP/1.1
 
-### Post ADD ITEM
-POST http://[::1]:5000/addItem HTTP/1.1
+### GET SINGLE User
+GET http://[::1]:5000/getUserDetails?user_wallet=0x40c7be7e5889dc9c6295dfa5ec5c97b36ce9eeef HTTP/1.1
+
+
+### GET User By User Name
+GET http://[::1]:5000/getUserByUsername?username=selvan HTTP/1.1
+
+
+### GET LeaderBoard
+GET http://[::1]:5000/leaderBoard HTTP/1.1
+
+
+### GET Referral records
+GET http://[::1]:5000/getReferralRecords?referrer_wallet=0x5E616deADe06C07B2A61E4fEcEec7394Ff362BbD HTTP/1.1
+
+
+
+### GET Completed Missions
+GET http://[::1]:5000/getCompletedMissions?user_wallet=1234567890 HTTP/1.1
+
+
+
+### Post ADD user
+POST http://[::1]:5000/addUserDetails HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "New Item"
+    "user_wallet":"0x66c7be7e5889dc9c6295dfa5ec5c97b36ce9eeef",
+    "username":"Deepak",
+    "discord":"ajselvan"
 }
 
+
+### Post Referral Records
+POST http://[::1]:5000/referralRecords HTTP/1.1
+Content-Type: application/json
+
+{
+  "referrer_wallet":"0x5E616deADe06C07B2A61E4fEcEec7394Ff362BbD",
+  "referred_wallet":"0xaF69A75A911085C06A4a375509a495c2A8fAD8F1"
+}
+
+
+### Post ADD Missions
+POST http://[::1]:5000/mission HTTP/1.1
+Content-Type: application/json
+
+{
+    "mission_id":"m_fol_ds_092023",
+    "mission_title":"follow kanalabs gaming on discord",
+    "platform":"discord"
+}
+
+
+### Post ADD Missions Activity
+POST http://[::1]:5000/missionActivity HTTP/1.1
+Content-Type: application/json
+
+{
+    "mission_id":"m_fol_tw_092023",
+    "user_wallet":"1234567890"
+}
+
+### Post ADD Levels
+POST http://[::1]:5000/levelRecords HTTP/1.1
+Content-Type: application/json
+
+{
+  "level_id":"7",
+  "level_name":"level 5",
+  "badge_id":"5",
+  "badge_name":"Hello",
+  "badge_description":"hiiii",
+  "required_points":"1000"
+}
+
+
+### Post ADD Levels
+POST http://[::1]:5000/referralRecords HTTP/1.1
+Content-Type: application/json
+
+{
+ "referrer_wallet":"0x40c7be7e5889dc9c6295dfa5ec5c97b36ce9eeef",
+  "referred_wallet":"0xFf00000000500190102000110000000000008453"
+}
+
+
+### Post ADD Referral links
+POST http://[::1]:5000/addReferralLinks HTTP/1.1
+Content-Type: application/json
+
+{
+ "user_wallet":"0x40c7be7e5889dc9c6295dfa5ec5c97b36ce9eeef",
+  "referral_link":"This is my gaming referral link"
+}
+
+
 ### Delete ITEM
-DELETE  http://[::1]:5000/items/3 HTTP/1.1
+DELETE http://[::1]:5000/deletUser?user_wallet=0x66c7be7e5889dc9c6295dfa5ec5c97b36ce9eeef HTTP/1.1
 
 
 ### Update ADD ITEM
-PUT http://[::1]:5000/items/2 HTTP/1.1
+PUT http://[::1]:5000/updateUser?user_wallet=0x66c7be7e5889dc9c6295dfa5ec5c97b36ce9eeef HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Deepak"
+    "username": "kkkkk"
 }

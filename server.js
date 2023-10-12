@@ -5,7 +5,7 @@ const fastify = require('fastify')({
 fastify.register(require('@fastify/swagger'),
 {
     exposeRoute: true,
-    routePrefix: '/docs',
+    routePrefix: '/gaming',
     swagger: {
         info: {
             title: 'fastify swagger'
