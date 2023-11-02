@@ -1,6 +1,9 @@
-let items = require('../items');
+let items = require('../userDetails');
 let referrals = require('../referralRecords');
 let missionCompleted = require('../missionActivity');
+let registrations = require('../tournamentRegistrations')
+let tournament_details = require('../tournamentDetails')
+
 
 const steam_data = "Steam Connected Successfully"
 const auth_link = "https://api.twitter.com/oauth/authenticate?oauth_token=k5jEUQAAAAABpu-YAAABiyM-zjI"
@@ -16,7 +19,8 @@ const getAllUserDetails = (req, reply) => {
         reply.send(items);
     } else {
         reply.code(400).send({ error: 'Failed to get all the users' });
-    }}
+    }
+}
 
 const steamConnect = (req, reply) => {
     reply.send(steam_data)
@@ -142,29 +146,53 @@ const addUserDetails = (req, reply) => {
         reply.code(400).send({ error: 'failed to add user details' });
     }
 };
+
+
 const deleteUser = (req, reply) => {
     const { user_wallet } = req.query;
-    items = items.filter((item => item.user_wallet !== user_wallet))
-    if (error) {
-        reply.code(400).send({ error: 'user_wallet not found' });
+    const itemIndex = items.findIndex((item) => item.user_wallet === user_wallet);
+    if (itemIndex === -1) {
+        reply.code(400).send({ error: 'User not found' });
     } else {
-        reply.send({ message: `Item ${user_wallet} has been removed` })
+        items.splice(itemIndex, 1);
+        reply.send({ message: `Item ${user_wallet} has been removed` });
+    }
+};
+
+
+
+const deleteTournamentRegistration = (req, reply) => {
+    const { registration_id } = req.query;
+    const itemIndex = registrations.findIndex((item) => item.registration_id === registration_id);
+    if (itemIndex === -1) {
+        reply.code(400).send({ error: 'User not found' });
+    } else {
+        registrations.splice(itemIndex, 1);
+        reply.send({ message: `Item ${registration_id} has been removed` });
+    }
+};
+
+
+const deleteTournamentDetails = (req, reply) => {
+    const { tournament_id } = req.query;
+    const itemIndex = tournament_details.findIndex((item) => item.tournament_id === tournament_id);
+    if (itemIndex === -1) {
+        reply.code(400).send({ error: 'User not found' });
+    } else {
+        tournament_details.splice(itemIndex, 1);
+        reply.send({ message: `Item ${tournament_id} has been removed` });
     }
 };
 
 
 const updateUser = (req, reply) => {
-    const { user_wallet } = req.query;
-    const { username, discord } = req.body;
+    const { username, discord, user_display_name, language, preferred_genres, instagram, twitter, telegram } = req.body;
 
-    // Find the item with the given user_wallet
     const itemIndex = items.findIndex((item) => item.user_wallet === user_wallet);
 
     if (itemIndex !== -1) {
-        // Create an object to hold the fields to update
         const updates = {};
 
-        // Update the fields if provided in the request
         if (username !== undefined) {
             updates.username = username;
         }
@@ -173,10 +201,72 @@ const updateUser = (req, reply) => {
             updates.discord = discord;
         }
 
+        if (user_display_name !== undefined) {
+            updates.user_display_name = user_display_name;
+        }
+
+        if (language !== undefined) {
+            updates.language = language;
+        }
+        
+        if (preferred_genres !== undefined) {
+            updates.preferred_genres = preferred_genres;
+        }
+
+        if (instagram !== undefined) {
+            updates.instagram = instagram;
+        }
+
+        if (twitter !== undefined) {
+            updates.twitter = twitter;
+        }
+
+        if (telegram !== undefined) {
+            updates.telegram = telegram;
+        }
         // Apply updates to the item
         items[itemIndex] = { ...items[itemIndex], ...updates };
 
         const updatedItem = items[itemIndex];
+
+        reply.send(updatedItem);
+    } else {
+        reply.status(404).send({ message: 'Failed to update user details' });
+    }
+};
+
+
+const updateTournamentregistration = (req, reply) => {
+    const { registration_id, selected_tournament_mode, tournament_id, team_id, selected_tournament_format } = req.body;
+
+    const itemIndex = registrations.findIndex((item) => item.registration_id === registration_id);
+
+    if (itemIndex !== -1) {
+        const updates = {};
+
+        if (tournament_id !== undefined) {
+            updates.tournament_id = tournament_id;
+        }
+
+        if (registration_id !== undefined) {
+            updates.registration_id = registration_id;
+        }
+
+        if (selected_tournament_format !== undefined) {
+            updates.selected_tournament_format = selected_tournament_format;
+        }
+
+        if (team_id !== undefined) {
+            updates.team_id = team_id;
+        }
+
+        if (selected_tournament_mode !== undefined) {
+            updates.selected_tournament_mode = selected_tournament_mode;
+        }
+
+        registrations[itemIndex] = { ...registrations[itemIndex], ...updates };
+
+        const updatedItem = registrations[itemIndex];
 
         reply.send(updatedItem);
     } else {
@@ -196,8 +286,25 @@ const addMissions = (req, reply) => {
         reply.send(item);
     } else {
         reply.code(400).send({ error: 'failed to add missions' });
-    }}
+    }
+}
 
+
+const addTournamentregistration = (req, reply) => {
+    const { registration_id, tournament_id, team_id, selected_tournament_mode, selected_tournament_format } = req.body
+    const item = {
+        registration_id,
+        tournament_id,
+        team_id,
+        selected_tournament_mode,
+        selected_tournament_format
+    }
+    if (item) {
+        reply.send(item);
+    } else {
+        reply.code(400).send({ error: 'failed to add tournament registration' });
+    }
+}
 const referralRecords = (req, reply) => {
     const { referrer_wallet, referred_wallet } = req.body
     const item = {
@@ -212,7 +319,8 @@ const referralRecords = (req, reply) => {
         reply.send(item);
     } else {
         reply.code(400).send({ error: 'failed to add referral records' });
-    }}
+    }
+}
 
 const missionActivity = (req, reply) => {
     const { mission_id, user_wallet } = req.body
@@ -228,7 +336,8 @@ const missionActivity = (req, reply) => {
         reply.send(item);
     } else {
         reply.code(400).send({ error: 'failed to add mission Activity' });
-    }}
+    }
+}
 
 const addreferralLinks = (req, reply) => {
     const { user_wallet, referral_link } = req.body
@@ -240,7 +349,8 @@ const addreferralLinks = (req, reply) => {
         reply.send(item);
     } else {
         reply.code(400).send({ error: 'failed to add referral links' });
-    }}
+    }
+}
 
 const addLevels = (req, reply) => {
     const { level_id, level_name, badge_id, badge_name, badge_description, required_points } = req.body
@@ -256,8 +366,52 @@ const addLevels = (req, reply) => {
         reply.send(item);
     } else {
         reply.code(400).send({ error: 'failed to add levels' });
-    }}
+    }
+}
 
+
+const tournamentBracket = (req, reply) => {
+    const { tournament_id, teamIds } = req.body;
+  
+    if (!tournament_id || !teamIds || teamIds.length < 2) {
+      reply.code(400).send({ error: 'Invalid input. You must provide a valid tournament_id and at least 2 teamIds.' });
+    } else {
+      const bracket = generateBracketLogic(tournament_id, teamIds);
+      if (bracket) {
+        reply.send({ status: 200, bracket: bracket });
+      } else {
+        reply.code(400).send({ error: 'Failed to generate bracket.' });
+      }
+    }
+  };
+  
+  function generateBracketLogic(tournament_id, teamIds) {
+  
+    const numberOfTeams = teamIds.length;
+    if (numberOfTeams < 2) {
+      return null;
+    }
+  
+    shuffleArray(teamIds);
+  
+    const bracket = [[]];
+  
+    for (let i = 0; i < numberOfTeams; i += 2) {
+      bracket[0].push([teamIds[i], teamIds[i + 1]]);
+    }
+  
+    const formattedBracket = bracket[0].map(match => match.map(team => team.split(',')));
+  
+    return formattedBracket;
+  }  
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+  
 
 module.exports = {
     getAllUserDetails,
@@ -279,5 +433,10 @@ module.exports = {
     steamConnect,
     twitterAuthLink,
     twitterConnect,
-    twitterFollow
+    twitterFollow,
+    addTournamentregistration,
+    deleteTournamentRegistration,
+    deleteTournamentDetails,
+    tournamentBracket,
+    updateTournamentregistration
 }

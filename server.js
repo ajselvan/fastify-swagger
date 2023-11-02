@@ -9,10 +9,10 @@ fastify.register(require('@fastify/swagger'),
     swagger: {
         info: {
             title: 'Kana-Gaming swagger'
-        },
+        },  
     },
 })
-
+    
 fastify.register(require('../Fastify swagger/routes/itemsRoute'))
 
 const PORT = 5000

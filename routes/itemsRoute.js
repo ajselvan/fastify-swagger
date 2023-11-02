@@ -1,4 +1,5 @@
-const { getAllUserDetails, getUserDetails, addUserDetails, deleteUser, updateUser, addMissions, addLevels, getUserByUsername, referralRecords, getReferralRecords, addreferralLinks, missionActivity, getCompletedMissions, getLeaderBoard, steamConnect, twitterAuthLink, twitterConnect, twitterFollow, getNotCompletedMissions, getUsernameExistsOrNot } = require('../controller/itemsController');
+const { getAllUserDetails, getUserDetails, addUserDetails, deleteUser, updateUser, addMissions, addLevels, getUserByUsername, referralRecords, getReferralRecords, addreferralLinks, missionActivity, getCompletedMissions, getLeaderBoard, steamConnect, twitterAuthLink, twitterConnect, twitterFollow, getNotCompletedMissions, getUsernameExistsOrNot, addTournamentregistration, deleteTournamentRegistration, deleteTournamentDetails, tournamentBracket, updateTournamentregistration } = require('../controller/itemsController');
+const registrations = require('../tournamentRegistrations');
 const Item = {
     type: 'object',
     properties: {
@@ -28,6 +29,17 @@ const missions = {
         mission_id: { type: 'string' },
         mission_title: { type: 'string' },
         platform: { type: 'string' }
+    }
+}
+
+const tournamentRegistrations = {
+    type: 'object',
+    properties: {
+        registration_id: { type: 'string' },
+        tournament_id: { type: 'string' },
+        team_id: { type: 'string' },
+        selected_tournament_mode: { type: 'string' },
+        selected_tournament_format: { type: 'string' }
     }
 }
 
@@ -184,7 +196,7 @@ const steamConnectOptions = {
                 },
                 example: { error: 'Failed to Connect Steam' }
             },
-            
+
         },
     },
     handler: steamConnect,
@@ -418,21 +430,12 @@ const deletUserOptions = {
     handler: deleteUser
 }
 
+
 const updateUserOptions = {
     schema: {
         tags: ['User'],
-        querystring: {
-            type: 'object',
-            properties: {
-                user_wallet: { type: 'string' },
-            },
-        },
         body: {
             type: 'object',
-            required: ['username'],
-            properties: {
-                username: { type: 'string' },
-            },
         },
         response: {
             200: Item,
@@ -602,6 +605,153 @@ const leaderBoardOptions = {
     handler: getLeaderBoard
 };
 
+const addTournamentregistrationOptions = {
+    schema: {
+        tags: ['Tournament Registration'],
+        body: {
+            type: 'object',
+            required: ['registration_id', 'tournament_id', 'team_id', 'selected_tournament_mode', 'selected_tournament_format'],
+            properties: {
+                registration_id: { type: 'string' },
+                tournament_id: { type: 'string' },
+                team_id: { type: 'string' },
+                selected_tournament_mode: { type: 'string' },
+                selected_tournament_format: { type: 'string' },
+            },
+        },
+        response: {
+            201: tournamentRegistrations,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to add tournament registration' }
+            },
+        },
+    },
+    handler: addTournamentregistration
+};
+
+
+const deleteTournamentRegistrationOptions = {
+    schema: {
+        tags: ['Tournament Registration'],
+        querystring: {
+            type: 'object',
+            properties: {
+                registration_id: { type: 'string' },
+            },
+            required: ['registration_id'],
+        },
+        response: {
+            200: {
+                type: 'object',
+                properties: {
+                    message: { type: 'string' }
+                }
+            },
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to delete tournament registration' }
+            },
+        },
+    },
+    handler: deleteTournamentRegistration
+}
+
+
+const updateTournamentregistrationOptions = {
+    schema: {
+        tags: ['Tournament Registration'],
+        body: {
+            type: 'object',
+        },
+        response: {
+            200: tournamentRegistrations,
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to update a tournament registration' }
+            },
+        },
+    },
+    handler: updateTournamentregistration,
+};
+
+
+const deleteTournamentDetailsOptions = {
+    schema: {
+        tags: ['Tournament Details'],
+        querystring: {
+            type: 'object',
+            properties: {
+                tournament_id: { type: 'string' },
+            },
+            required: ['tournament_id'],
+        },
+        response: {
+            200: {
+                type: 'object',
+                properties: {
+                    message: { type: 'string' }
+                }
+            },
+            400: {
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'Failed to delete tournament details' }
+            },
+        },
+    },
+    handler: deleteTournamentDetails
+}
+
+
+const tournamentBracketOptions = {
+    schema: {
+        tags: ['Tournament Bracket'],
+        description: 'Generate tournament bracket rounds',
+        body: {
+            type: 'object',
+            properties: {
+                tournament_id: { type: 'string' },
+                teamIds: { type: 'array', items: { type: 'string' } },
+            },
+            required: ['tournament_id', 'teamIds'],
+        },
+        response: {
+            200: {
+                description: 'Successful response',
+                type: 'object',
+                properties: {
+                    bracket: {
+                        type: 'array', items: { type: 'array', items: { type: 'string' } },
+                    },
+                },
+                400: {
+                    description: 'Bad Request',
+                    type: 'object',
+                    properties: {
+                        error: { type: 'string' },
+                    },
+                    example: { error: 'Failed to generate bracket' },
+                },
+            },
+        },
+    },
+    handler: tournamentBracket
+}
+
+
+
 function itemRoutes(fastify, options, done) {
     // Get All items
     fastify.get('/getAllUserDetails', getAllUserDetailsOptions)
@@ -615,7 +765,7 @@ function itemRoutes(fastify, options, done) {
     // Add Item
     fastify.post('/addUserDetails', addUserDetailsOptions)
 
-    // User name exists or not
+    // Detele user
     fastify.delete('/deletUser', deletUserOptions)
 
     // Update Item
@@ -660,9 +810,23 @@ function itemRoutes(fastify, options, done) {
     // Get LeaderBoard
     fastify.get('/leaderBoard', leaderBoardOptions)
 
-
     // Get User By User name
     fastify.get('/userName', getUserExitsOrNotOptions)
+
+    // Add Tournament Registration
+    fastify.post('/addTournamentregistration', addTournamentregistrationOptions)
+
+    // Delete Tournament Registration
+    fastify.delete('/deleteTournamentregistration', deleteTournamentRegistrationOptions)
+
+    // Delete Tournament Details
+    fastify.delete('/deleteTournamentdetails', deleteTournamentDetailsOptions)
+
+    // Tournament Bracket
+    fastify.post('/tournamentBracket/rounds', tournamentBracketOptions)
+
+    // Update Tournament Registration
+    fastify.put('/updateTournamentregistration', updateTournamentregistrationOptions)
 
     done()
 }
