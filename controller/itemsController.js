@@ -412,6 +412,17 @@ const tournamentBracket = (req, reply) => {
     }
   }
   
+  const getTournamentDetails = (req, reply) => {
+    const { tournament_status } = req.query;
+    const matchingRecords = tournament_details.filter((item) => item.tournament_status === tournament_status);
+    if (matchingRecords) {
+        console.log(matchingRecords);
+        reply.send(matchingRecords);
+    } else {
+        reply.code(400).send({ error: 'tournament_status not found' });
+    }
+};
+
 
 module.exports = {
     getAllUserDetails,
@@ -438,5 +449,6 @@ module.exports = {
     deleteTournamentRegistration,
     deleteTournamentDetails,
     tournamentBracket,
-    updateTournamentregistration
+    updateTournamentregistration,
+    getTournamentDetails
 }

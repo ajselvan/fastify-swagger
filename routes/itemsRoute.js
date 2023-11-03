@@ -1,4 +1,4 @@
-const { getAllUserDetails, getUserDetails, addUserDetails, deleteUser, updateUser, addMissions, addLevels, getUserByUsername, referralRecords, getReferralRecords, addreferralLinks, missionActivity, getCompletedMissions, getLeaderBoard, steamConnect, twitterAuthLink, twitterConnect, twitterFollow, getNotCompletedMissions, getUsernameExistsOrNot, addTournamentregistration, deleteTournamentRegistration, deleteTournamentDetails, tournamentBracket, updateTournamentregistration } = require('../controller/itemsController');
+const { getAllUserDetails, getUserDetails, addUserDetails, deleteUser, updateUser, addMissions, addLevels, getUserByUsername, referralRecords, getReferralRecords, addreferralLinks, missionActivity, getCompletedMissions, getLeaderBoard, steamConnect, twitterAuthLink, twitterConnect, twitterFollow, getNotCompletedMissions, getUsernameExistsOrNot, addTournamentregistration, deleteTournamentRegistration, deleteTournamentDetails, tournamentBracket, updateTournamentregistration, getTournamentDetails } = require('../controller/itemsController');
 const registrations = require('../tournamentRegistrations');
 const Item = {
     type: 'object',
@@ -99,6 +99,29 @@ const referralsLinks = {
         referral_link: { type: 'string' },
     }
 }
+
+const tournament_details = {
+    type: 'object',
+    properties: {
+        tournament_id: { type: 'string' },
+        tournament_status: { type: 'string' },
+        tournament_name: { type: 'string' },
+        tournament_mode: { type: 'string' },
+        tournament_format: { type: 'string' },
+        start_date: { type: 'string' },
+        end_date: { type: 'string' },
+        prize_pool: { type: 'string' },
+        registration_status: { type: 'string' },
+        registration_fee: { type: 'string' },
+        registration_start_date: { type: 'string' },
+        registration_deadline: { type: 'string' },
+        max_participants: { type: 'string' },
+        game_id: { type: 'string' },
+        tournament_winners: { type: 'string' },
+        description: { type: 'string' },
+        total_rounds: { type: 'string' },
+    }
+}
 // Options for Get All items
 
 const getAllUserDetailsOptions = {
@@ -106,10 +129,12 @@ const getAllUserDetailsOptions = {
         tags: ['User'],
         response: {
             200: {
+                description: 'Successful response',
                 type: 'array',
                 items: Item
             },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -132,8 +157,13 @@ const getUserDetailsOptions = {
             required: ['user_wallet'],
         },
         response: {
-            200: Item,
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: Item
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -158,6 +188,7 @@ const getUserExitsOrNotOptions = {
         },
         response: {
             200: {
+                description: 'Successful response',
                 type: 'object',
                 properties: {
                     message: { type: 'string' },
@@ -188,8 +219,13 @@ const steamConnectOptions = {
             required: ['user_wallet', 'mission_id'],
         },
         response: {
-            200: steamResponse,
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: steamResponse
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -206,8 +242,13 @@ const authLinkOptions = {
     schema: {
         tags: ['Missions'],
         response: {
-            200: steamResponse,
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: steamResponse
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -231,8 +272,13 @@ const connectOptions = {
             },
         },
         response: {
-            201: twittermissions,
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: twittermissions
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -255,8 +301,13 @@ const followOptions = {
             },
         },
         response: {
-            201: steamResponse,
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: steamResponse
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -280,10 +331,12 @@ const getReferralRecordsOptions = {
         },
         response: {
             200: {
+                description: 'Successful response',
                 type: 'array',
                 items: referrals
             },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -307,10 +360,12 @@ const getCompletedMissionsOptions = {
         },
         response: {
             200: {
+                description: 'Successful response',
                 type: 'array',
                 items: missionCompleted
             },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -335,10 +390,12 @@ const getNotCompletedMissionsOptions = {
         },
         response: {
             200: {
+                description: 'Successful response',
                 type: 'array',
                 items: missionNotCompleted
             },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -362,8 +419,13 @@ const getUserByUsernameOptions = {
             required: ['username'],
         },
         response: {
-            200: Item,
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: Item
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -387,8 +449,13 @@ const addUserDetailsOptions = {
             },
         },
         response: {
-            201: Item,
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: Item
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -413,12 +480,14 @@ const deletUserOptions = {
         },
         response: {
             200: {
+                description: 'Successful response',
                 type: 'object',
                 properties: {
                     message: { type: 'string' }
                 }
             },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -438,8 +507,13 @@ const updateUserOptions = {
             type: 'object',
         },
         response: {
-            200: Item,
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: Item
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -464,8 +538,13 @@ const missionOptions = {
             },
         },
         response: {
-            201: missions,
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: missions
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -490,8 +569,13 @@ const referralRecordsOptions = {
             },
         },
         response: {
-            201: referrals,
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: referrals
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -516,8 +600,13 @@ const missionActivityOptions = {
             },
         },
         response: {
-            201: missionCompleted,
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: missionCompleted
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -542,8 +631,13 @@ const addReferralLinksOptions = {
             },
         },
         response: {
-            201: referralsLinks,
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: referralsLinks
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -572,8 +666,13 @@ const levelOptions = {
             },
         },
         response: {
-            201: levels,
+            201: {
+                description: 'Successful response',
+                type: 'array',
+                items: levels
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -590,10 +689,12 @@ const leaderBoardOptions = {
         tags: ['LeaderBoard'],
         response: {
             200: {
+                description: 'Successful response',
                 type: 'array',
                 items: Item
             },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -620,8 +721,13 @@ const addTournamentregistrationOptions = {
             },
         },
         response: {
-            201: tournamentRegistrations,
+            201: {
+                description: 'Successful response',
+                type: 'array',
+                items: tournamentRegistrations
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -646,12 +752,14 @@ const deleteTournamentRegistrationOptions = {
         },
         response: {
             200: {
+                description: 'Successful response',
                 type: 'object',
                 properties: {
                     message: { type: 'string' }
                 }
             },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -671,8 +779,20 @@ const updateTournamentregistrationOptions = {
             type: 'object',
         },
         response: {
-            200: tournamentRegistrations,
+            200: {
+                200: {
+                    description: 'Successful response',
+                    type: 'object',
+                    properties: {
+                        message: { type: 'string' }
+                    }
+                },                type: 'object',
+                properties: {
+                    message: { type: 'string' }
+                }
+            },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -697,12 +817,14 @@ const deleteTournamentDetailsOptions = {
         },
         response: {
             200: {
+                description: 'Successful response',
                 type: 'object',
                 properties: {
                     message: { type: 'string' }
                 }
             },
             400: {
+                description: 'Bad Request',
                 type: 'object',
                 properties: {
                     error: { type: 'string' }
@@ -749,6 +871,36 @@ const tournamentBracketOptions = {
     },
     handler: tournamentBracket
 }
+
+
+const getTournamentDetailsOptions = {
+    schema: {
+        tags: ['Tournament Details'],
+        querystring: {
+            type: 'object',
+            properties: {
+                tournament_status: { type: 'string' },
+            },
+            required: ['tournament_status'],
+        },
+        response: {
+            200: {
+                description: 'Successful response',
+                type: 'array',
+                items: tournament_details
+            },
+            400: {
+                description: 'Bad Request',
+                type: 'object',
+                properties: {
+                    error: { type: 'string' }
+                },
+                example: { error: 'tournament_status not found' }
+            },
+        },
+    },
+    handler: getTournamentDetails,
+};
 
 
 
@@ -826,7 +978,10 @@ function itemRoutes(fastify, options, done) {
     fastify.post('/tournamentBracket/rounds', tournamentBracketOptions)
 
     // Update Tournament Registration
-    fastify.put('/updateTournamentregistration', updateTournamentregistrationOptions)
+    fastify.put('/updateTournamentregistration', updateTournamentregistrationOptions);
+
+    // Get Tournament Details
+    fastify.get('/getTournamentDetails', getTournamentDetailsOptions)
 
     done()
 }
